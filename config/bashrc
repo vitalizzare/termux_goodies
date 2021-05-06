@@ -1,0 +1,10 @@
+CONF="$HOME/.config/bash.d"
+if [ -d "$CONF" ]
+then
+    for f in "$CONF"/*
+    do
+        . "$f"
+    done
+    unset f
+fi
+unset CONF
