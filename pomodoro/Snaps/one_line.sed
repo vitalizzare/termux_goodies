@@ -1,12 +1,17 @@
 #!/bin/sed -nf
 
-# ============== ATTENTION ==============
-# This isn't a full-fledged parser!
+# =============== ATTENTION ===============
 # The only purpose of the script was 
 # to ease converting simple formatted code
 # into a single line for further use 
-# in blocks of the Automate android app.
-# =======================================
+# in blocks of the Automate app on Android.
+# Some tricky cases I left untuched.
+# E.g. recognition of strings wrapped with 
+# ' or " and written in several lines,
+# or <<EOF (here-document) cases will be
+# stitched incorrectly with semicolons
+# in place of \n.
+# =========================================
 
 /^#/ ! {
 # If not a commentary line
@@ -23,6 +28,10 @@ $ {
 # and clean unwanted 
 # then print.
     g
+    s/\\\n//g
+    s/{\ *\n/{ /g
+    s/&&\ *\n/\&\& /g
+    s/||\ *\n/|| /g
     s/\n/;/g
     s/;\ *then\ *;/;then\ /g
     s/;\ *else\ *;/;else\ /g
