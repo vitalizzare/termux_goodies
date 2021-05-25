@@ -1,17 +1,15 @@
 #!/bin/sed -nf
 
-# =============== ATTENTION ===============
-# The only purpose of the script was 
-# to ease converting simple formatted code
-# into a single line for further use 
-# in blocks of the Automate app on Android.
-# Some tricky cases I left untuched.
-# E.g. recognition of strings wrapped with 
-# ' or " and written in several lines,
-# or <<EOF (here-document) cases will be
-# stitched incorrectly with semicolons
-# in place of \n.
-# =========================================
+# ============== ATTENTION ==============
+# The script's sole purpose is to make it
+# easy to convert simple formatted code
+# to one line for later use in blocks
+# of the Automate app on Android. It is
+# far not perfect. So, check the result
+# before use.
+# =======================================
+
+/^\ *$/ b end
 
 /^#/ ! {
 # If not a commentary line
@@ -22,6 +20,7 @@
     H
 }
 
+:end
 $ {
 # At the end grab holden code,
 # sub newlines with semicolons
@@ -29,17 +28,21 @@ $ {
 # then print.
     g
     s/\\\n//g
-    s/{\ *\n/{ /g
-    s/&&\ *\n/\&\& /g
-    s/||\ *\n/|| /g
+    s/^ *//g
+    s/ *$//g
+    s/\(;\|\n\) *then\n/\1then /g
+    s/\(;\|\n\) *else\n/\1else /g
+    s/\(;\|\n\) *do\n/\1do /g
+    s/ in\n/ in /g
+    s/ in \([^\n]\+)\)\n/ in \1 /g
+    s/{ *\n/{ /g
+    s/( *\n/(/g
+    s/&& *\n/\&\& /g
+    s/|| *\n/|| /g
+    s/\n\? *;;\ *\n/;;/g
+    s/; *\n/;/g
+    s/\(;;.*)\) *\n/\1 /g
     s/\n/;/g
-    s/;\ *then\ *;/;then\ /g
-    s/;\ *else\ *;/;else\ /g
-    s/;\ *do\ *;/;do\ /g
-    s/;\ *case\ \(.*\)\ in\ *;/;case \1 in\ /g
-    s/;;;*/;;/g
-    s/);/)\ /g
-    s/{/{\ /g
     s/^;*//
     p
 }
