@@ -9,10 +9,12 @@
 # before use.
 # =======================================
 
+# if empty line then skip the next block
 /^\ *$/ b end
 
 /^#/ ! {
 # If not a commentary line
+# (and not an empty line)
 # then clean spaces and hold.
     s/^\ *//
     s/\ *$//
@@ -22,10 +24,9 @@
 
 :end
 $ {
-# At the end grab holden code,
-# sub newlines with semicolons
-# and clean unwanted 
-# then print.
+# At the end grab holded code, then
+# substitude newlines with semicolons
+# when needed and, then print.
     g
     s/\\\n//g
     s/^ *//g
